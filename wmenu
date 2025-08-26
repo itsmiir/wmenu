@@ -1,0 +1,43 @@
+#/usr/bin/env bash
+
+# set width and height of window
+width=$(wlinfo | gv "width") 
+height=$(wlinfo | gv "height")
+height=$((height / 10))
+
+# do some crazy bash hax
+x="x"
+
+# piping is hard so the output of fzf is just sent to a temp file
+mkdir /tmp/$$/
+touch /tmp/$$/wmenu;
+
+# put the window at the top of the screen
+ymax=32
+
+if [ "$PATHCACHE" = "" ]; then
+echo "wmenu: PATHCACHE env variable not set: set it to a folder, and run refresh-searchcache!"
+exit 1
+fi
+
+# open the window
+foot -T "dmenu at home" -D $PATHCACHE -w $width$x$height -- sh -c "fzf > /tmp/$$/wmenu" &
+
+
+# FIXME: move the window to the top of the screen vvv
+# ----------------
+# grab the window id (this is kinda buggy, because it gets the active window)
+# sleep 0.0001
+# id=$(./list-window-details | ./gv "id")
+
+# and move the window 
+# gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell/Extensions/Windows --method org.gnome.Shell.Extensions.Windows.Move $id 0 $ymax >> /dev/null
+# ----------------
+
+
+# and once it's closed...
+wait $!
+
+# ...execute the command and cleanup
+sh -c $(cat /tmp/$$/wmenu)
+rm -rf /tmp/$$/

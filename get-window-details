@@ -1,0 +1,3 @@
+#/usr/bin/bash
+deets=$(gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell/Extensions/Windows --method org.gnome.Shell.Extensions.Windows.Details $(/home/azalea/scripts/misc/get-active-window | gv "id"))
+echo $deets

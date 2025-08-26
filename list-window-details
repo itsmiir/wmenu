@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+import json
+from typing import Any
+import ast
+import sys
+import os
+import subprocess
+result = subprocess.check_output(["bash", "./get-window-details"])
+result = json.loads(ast.literal_eval(result.decode())[0])
+for key in result:
+    print(f"{key}: {result[key]}")
